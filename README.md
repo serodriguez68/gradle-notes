@@ -136,13 +136,13 @@ components*. In this section we are talking about the former.
   access to customize your build.
 - See the `1-hello-world` module for an example on how to use this.
 
-## Defining and configuring a task
+### Defining and configuring a task
 
-### Ad Hoc Tasks
+#### Ad Hoc Tasks
 - Good fit for a one-off simple actions by adding code into `doFirst` or
   `doLast` actions.
 
-### Typed Tasks
+#### Typed Tasks
 - Better fit for more complex task logic.
 - Our custom typed tasks make use of other higher level tasks provided
   by Gradle (e.g `Copy, Zip, etc`).
@@ -170,3 +170,30 @@ tasks.register<Zip>("zipDocs") {
     destinationDirectory.set(layout.buildDirectory.dir("dist"))
 }
 ```
+#### The Directed Acyclic Graph (DAG)
+- Dependent tasks in gradle form a DAG with tasks being the nodes of the
+  graph.
+- The DAG CANNOT have cycles. Gradle will fail the build if a cycle is
+  detected.
+- In Gradle, the execution order of parallel tasks is not guaranteed
+  (i.e. it does not follow the declaration order in the task code).
+  - For example, if `A --> B and A --> C`, there is no guarantee on
+    which task `B` or `C` will run first.
+  - To force a run order we can:
+    - Declare an extra dependency (e.g. `C --> B`) to ensure that `B` runs
+      before `C`.
+    - There are other methods for finer grained order control like using
+      `mustRunAfter` (see docs more info).
+- By default, Gradle does not provide a way to visualize the resulting
+  DAG.
+  - The next best thing to do without installing anything else is to
+    print the names of all the tasks that will get run without running
+    them using the `--dry-run` option
+    - e.g. `./gradlew zipDocs --dry-run`
+  - Alternatively, you can install the
+    [Gradle task tree plugin](https://github.com/dorongold/gradle-task-tree)
+    which allows you to render the tasks as a tree.
+
+## Other useful commands
+- `./gradlew tasks --all` lists all tasks available for the gradle
+  project.
