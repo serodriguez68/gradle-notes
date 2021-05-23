@@ -194,6 +194,49 @@ tasks.register<Zip>("zipDocs") {
     [Gradle task tree plugin](https://github.com/dorongold/gradle-task-tree)
     which allows you to render the tasks as a tree.
 
+### Build lifecycle phases
+
+Everytime we run a task, Gradle will:
+- Build the complete DAG reading the build file
+- Create and configure the tasks
+- Execute them in the correct order
+
+The above formally happens in 3 phases. Understanding what happens when
+is very important to write correct gradle tasks and debug.
+
+####  1. Initialization Phase
+- Evaluates the `settings.gradle` file and sets up the build (configures
+the build *not the tasks*).
+
+#### 2. Configuration Phase
+- Gradle parses and evaluates the build logic in one or many build
+  scripts (and builds the task DAG).
+  - In multi-project software components, each project typically defines
+    its own build script (although this is not mandatory).
+- In this phase, tasks are **configured**, NOT run.
+- *Configuration of tasks* means assigning values to properties or
+  calling API methods from higher order tasks.
+- Performance is critical in this phase, since at this point the code
+  cannot be parallelized (TODO: is this true?).
+
+#### 3. Execution Phase
+- Execute tasks in correct order.
+
+In a typical custom task, this is where configuration code and execution
+code goes:
+```kotlin
+// Configuration Code
+tasks.create("myTask") {
+    // More configuration code
+    doFirst {
+        // Execution code always inside the doFirst or doLast action blocks
+    }
+    doLast {
+        // Execution code always inside the doFirst or doLast action blocks
+    }
+}
+```
+
 ## Other useful commands
 - `./gradlew tasks --all` lists all tasks available for the gradle
   project.
