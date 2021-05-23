@@ -2,3 +2,4 @@
 1-hello-world/.gradle/*
 # Temporary powerpoint files like ~$editable-images.pptx
 ~$*.pptx
+.gradle

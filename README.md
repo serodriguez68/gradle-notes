@@ -42,7 +42,7 @@ programming languages like: Java Android, Go, Python, Java, Kotlin, etc.
   file is typically name `build.gradle` (Groovy) or `build.gradle.kts`
   (Kotlin).
 - Tasks: The step-by-step automation instructions to build a project.
-  You write tasks in the build script.
+  You write tasks in the build script. Tasks ara a unit of work.
 - This means that the conceptual model is:
   - A software component is called a `Project`.
   - One `Project` has one to many `Tasks`.
@@ -135,3 +135,38 @@ components*. In this section we are talking about the former.
 - It also allows you to set custom key value pairs that you can later
   access to customize your build.
 - See the `1-hello-world` module for an example on how to use this.
+
+## Defining and configuring a task
+
+### Ad Hoc Tasks
+- Good fit for a one-off simple actions by adding code into `doFirst` or
+  `doLast` actions.
+
+### Typed Tasks
+- Better fit for more complex task logic.
+- Our custom typed tasks make use of other higher level tasks provided
+  by Gradle (e.g `Copy, Zip, etc`).
+- We don't necessarily have to code the action details as the higher
+  level tasks we use provide APIs that probably do much of what we need.
+  - In our code we typically set property values or call methods from
+    the higher level task.
+
+```kotlin
+tasks.register<Copy>("myCopyTask") {
+    from(layout.projectDirectory.dir("src"))
+    into(layout.buildDirectory.dir("docs"))
+    include("**/*md")
+    includeEmptyDirs = false
+}
+```
+
+### Task dependencies
+A dependency can be defined with the `dependsOn` method.
+```kotlin
+tasks.register<Zip>("zipDocs") {
+    dependsOn(tasks["myCopyTask"])
+    from(layout.buildDirectory.dir("docs"))
+    archiveFileName.set("docs.zip")
+    destinationDirectory.set(layout.buildDirectory.dir("dist"))
+}
+```
