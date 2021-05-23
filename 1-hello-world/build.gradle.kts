@@ -1,5 +1,5 @@
 tasks.create("printHello") {
     doLast {
-        println("Hello World")
+        println("Hello World - Version $version")
     }
 }
