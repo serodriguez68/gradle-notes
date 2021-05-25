@@ -237,6 +237,36 @@ tasks.create("myTask") {
 }
 ```
 
+### Applying reusable functionality with plugins
+Plugins provide reusable build functionality across projects. Gradle has
+two types of plugins.
+
+#### Script Plugins
+- Script plugins are essentially auxiliary build scripts that can be
+  included into the main `build.gradle.(kts)` file.
+- We write these auxiliary scripts using the same syntax as the main
+  one, just in a different file.
+- The main use case for Script Plugins is to use them to split up the
+  build logic of a **SINGLE software project** into multiple files to
+  make it more maintainable.
+- See `2-tasks-sample/build.gradle.kts` for an example of how a build
+  script can reference other script plugins.
+
+#### Binary plugins
+- Binary plugins are meant for more complex cases than script plugins.
+- Their main use case is to make plugins reusable across **MULTIPLE
+  self-contained software projects**.
+- Binary plugins are Implemented as classes that get bundled as JAR
+  files.
+- Some binary plugins are available through gradle itself. These are
+  called **core plugins** (e.g. the `base` plugin)
+- There are also some community plugins available [through the plugin
+  portal](https://plugins.gradle.org/).
+- You can also build and distribute your own binary plugins (out of
+  scope of this summary).
+- See `2-tasks-sample/archiving.gradle.kts` for an example on how to
+  include a binary plugin.
+
 ## Other useful commands
 - `./gradlew tasks --all` lists all tasks available for the gradle
   project.
