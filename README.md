@@ -267,6 +267,76 @@ two types of plugins.
 - See `2-tasks-sample/archiving.gradle.kts` for an example on how to
   include a binary plugin.
 
+### Domain object runtime representation
+
+- Domain Objects are programmatic representations of Gradle concepts
+  like Projects, Tasks, Actions, Plugins among others.
+- Domain objects in Gradle can be inspected and modified
+  programmatically from the build script.
+- This programmatic access to domain objects is what gives Gradle a lot
+  of its power.
+- Domain Objects are also known as "Core types" in the Gradle docs.
+- We will explore some of the most important domain objects here.
+
+#### The "Gradle" domain object
+- Represents an invocation of the build.
+- Has knowledge of the project hierarchy in single and multi-project
+  builds.
+- Provides pointers to higher order configurations of a build (version,
+  home directory, etc).
+- Can register callback logic to react to certain events during the
+  build.
+
+#### The "Project" domain object
+- One "Gradle" domain object has multiple "Project" Domain objects.
+- Represents a software component and provides an API to access the
+  object hierarchy.
+  - e.g. Register new tasks, modify output directory
+
+#### The "Task" domain object
+- A "Project" holds many "Tasks".
+- Represents a unit of work with its potential dependencies
+
+#### The "Action" domain object
+- A "Task" holds 0 to many "Actions"
+- "Actions" can be "doFirst", "doLast"
+- An "Action" represents the actual work performed during the execution
+  phase.
+
+#### The "Plugin" domain object
+- "Plugin" domain objects are linked to the "Project" domain objects
+  (one project can hold many plugins).
+
+
+### Navigating the Gradle Documentation
+
+#### The Gradle User Guide
+- Explains the build tool and its functionality at a conceptual level.
+- It is recommended to read this guide from cover to cover.
+- https://docs.gradle.org/current/userguide/userguide.html
+
+#### Gradle Guides
+- Hands-on, tutorial-style documentation.
+- Explains certain aspects of Gradle by example.
+- Read the ones that are relevant for your day-to-day work.
+- https://gradle.org/guides/
+
+#### Gradle DSL Docs
+- The Gradle DSL is how we actually use the conceptual elements of the
+  tool in the build scripts.
+- The DSL docs document all the domain objects plus their properties and
+  methods.
+- It is a lower level type of documentation than the User Guide or the
+  Gradle Guides.
+- Use the DSL docs when looking for specific properties of domain
+  objects.
+- https://docs.gradle.org/current/dsl/index.html
+
+#### Gradle Javadocs
+- Gradle is built using Java.
+- You can read even lower level Gradle documentation by reading the
+  source code's Javadoc.
+
 ## Other useful commands
 - `./gradlew tasks --all` lists all tasks available for the gradle
   project.
